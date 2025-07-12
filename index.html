@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómo entrenar a tu dragón - Para Andrea</title>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    background: black;
+    color: white;
+    overflow: clip; /* Evita scroll sin romper layout */
+  }
+
+  .card {
+    background: #1f1f1f;
+    border-radius: 16px;
+    width: 90vw;
+    max-width: 400px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  button {
+    padding: 12px 24px;
+    margin: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .yes {
+    background-color: #22c55e;
+    color: white;
+  }
+
+  .no {
+    background-color: #ef4444;
+    color: white;
+  }
+
+  .next {
+    background-color: #3b82f6;
+    color: white;
+    width: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .floating-heart {
+    position: fixed;
+    top: 100%;
+    font-size: 2rem;
+    animation: floatUp 5s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-150vh); opacity: 0; }
+  }
+
+  .heart {
+    fill: red;
+    width: 10vw;
+    animation: pulse 1s ease infinite;
+  }
+</style>
+
+</head>
+<body>
+
+  <div class="card" id="story">
+    <img id="img" src="desdentado.webp" alt="Escena" />
+    <h1 id="titulo">Cómo entrenar a tu dragón</h1>
+    <p id="texto">En una isla lejana, un joven aventurero encontró un dragón muy especial: ¡Desdentado!</p>
+    <div id="botones">
+      <button class="next" onclick="siguiente()">Siguiente 🐉</button>
+    </div>
+  </div>
+
+  <script>
+    const escenas = [
+      {
+        titulo: "Cómo entrenar a tu dragón",
+        texto: "En una isla lejana, un joven aventurero encontró un dragón muy especial: ¡Desdentado!",
+        img: "desdentado1.jpg",
+      },
+      {
+        titulo: "Un vínculo especial",
+        texto: "Con mucha paciencia y cariño, el joven y Desdentado se hicieron mejores amigos.",
+        img: "desdentado2.jpg",
+      },
+      {
+        titulo: "Una misión de amor",
+        texto: "Desdentado sentía que su amigo estaba enamorado de alguien muy especial... una chica llamada Andrea.",
+        img: "desdentado3.jpg",
+      },
+      {
+        titulo: "El vuelo más importante",
+        texto: "Juntos, volaron por los cielos buscando el momento perfecto para declararse...",
+        img: "vuelo.jpg",
+      },
+      {
+        titulo: "Andrea, ¿quieres ser mi pareja?",
+        texto: "Con la ayuda de Desdentado, el joven por fin encontró el valor para preguntártelo ❤️",
+        img: "corazon.png",
+        final: true,
+      }
+    ];
+
+    const messages = [
+      "¿Estás seguro?", "¿En serio??", "¿Estás 100% seguro?", "Piénsalo bien...",
+      "Pookie, di que sí 🥺", "Si dices que no, lloraré 😢", "Voy a estar muy triste...",
+      "Ok, dejaré de insistir...", "¡Mentira! Di que sí, por favor ❤️"
+    ];
+
+    let paso = 0;
+    let messageIndex = 0;
+    let moveAttempts = 0;
+
+    const titulo = document.getElementById("titulo");
+    const texto = document.getElementById("texto");
+    const img = document.getElementById("img");
+    const botones = document.getElementById("botones");
+
+    function siguiente() {
+      paso++;
+      mostrarEscena();
+    }
+
+    function mostrarEscena() {
+      const escena = escenas[paso];
+      titulo.textContent = escena.titulo;
+      texto.textContent = escena.texto;
+      img.src = escena.img;
+
+      if (escena.final) {
+        botones.innerHTML = `
+          <button class="yes" id="yes">¡Sí!</button>
+          <button class="no" id="no">No :(</button>
+          <p id="respuesta" class="hidden"></p>
+        `;
+
+        document.getElementById("yes").onclick = () => {
+          const respuesta = document.getElementById("respuesta");
+          respuesta.textContent = "¡Sabía que dirías que sí! 💖😍";
+          respuesta.classList.remove("hidden");
+        };
+
+        document.getElementById("no").onclick = () => {
+          const noBtn = document.getElementById("no");
+          const yesBtn = document.getElementById("yes");
+          noBtn.textContent = messages[messageIndex];
+          messageIndex = (messageIndex + 1) % messages.length;
+
+          const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+          yesBtn.style.fontSize = `${currentSize * 1.2}px`;
+
+          if (moveAttempts > 2) {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            noBtn.style.position = "absolute";
+            noBtn.style.left = `${Math.random() * maxX}px`;
+            noBtn.style.top = `${Math.random() * maxY}px`;
+          }
+
+          moveAttempts++;
+          addFloatingHeart();
+        };
+      } else {
+        botones.innerHTML = `<button class="next" onclick="siguiente()">Siguiente 🐉</button>`;
+      }
+    }
+
+    function addFloatingHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("floating-heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = `${Math.random() * 100}vw`;
+      heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+  </script>
+</body>
+</html>
