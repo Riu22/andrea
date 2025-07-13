@@ -169,42 +169,44 @@
       texto.textContent = escena.texto;
       img.src = escena.img;
 
-      if (escena.final) {
-        botones.innerHTML = `
-        <form id="form-si" action="https://formspree.io/f/xgvzwvvn" method="POST" onsubmit="event.preventDefault(); document.getElementById('respuesta').textContent = '¡Sabía que dirías que sí! 💖😍'; document.getElementById('respuesta').classList.remove('hidden');">
-          <button class="yes" id="yes" type="submit">¡Sí!</button>
-        </form>
-        <button class="no" id="no">No :(</button>
-        <p id="respuesta" class="hidden"></p>
-        `;
+  if (escena.final) {
+    botones.innerHTML = `
+      <form id="form-si" action="https://formspree.io/f/xgvzwvvn" method="POST" target="_blank">
+        <input type="hidden" name="respuesta" value="Sí" />
+        <button class="yes" id="yes" type="submit">¡Sí!</button>
+      </form>
+      <button class="no" id="no">No :(</button>
+      <p id="respuesta" class="hidden"></p>
+    `;
 
-        document.getElementById("yes").onclick = () => {
-          const respuesta = document.getElementById("respuesta");
-          respuesta.textContent = "¡Sabía que dirías que sí! 💖😍";
-          respuesta.classList.remove("hidden");
-        };
+    document.getElementById("form-si").onsubmit = function() {
+      const respuesta = document.getElementById("respuesta");
+      respuesta.textContent = "¡Sabía que dirías que sí! 💖😍";
+      respuesta.classList.remove("hidden");
+      // El formulario se enviará normalmente
+    };
 
-        document.getElementById("no").onclick = () => {
-          const noBtn = document.getElementById("no");
-          const yesBtn = document.getElementById("yes");
-          noBtn.textContent = messages[messageIndex];
-          messageIndex = (messageIndex + 1) % messages.length;
+    document.getElementById("no").onclick = () => {
+      const noBtn = document.getElementById("no");
+      const yesBtn = document.getElementById("yes");
+      noBtn.textContent = messages[messageIndex];
+      messageIndex = (messageIndex + 1) % messages.length;
 
-          const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-          yesBtn.style.fontSize = `${currentSize * 1.2}px`;
+      const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+      yesBtn.style.fontSize = `${currentSize * 1.2}px`;
 
-          if (moveAttempts > 2) {
-            const maxX = window.innerWidth - noBtn.offsetWidth;
-            const maxY = window.innerHeight - noBtn.offsetHeight;
-            noBtn.style.position = "absolute";
-            noBtn.style.left = `${Math.random() * maxX}px`;
-            noBtn.style.top = `${Math.random() * maxY}px`;
-          }
+      if (moveAttempts > 2) {
+        const maxX = window.innerWidth - noBtn.offsetWidth;
+        const maxY = window.innerHeight - noBtn.offsetHeight;
+        noBtn.style.position = "absolute";
+        noBtn.style.left = `${Math.random() * maxX}px`;
+        noBtn.style.top = `${Math.random() * maxY}px`;
+      }
 
-          moveAttempts++;
-          addFloatingHeart();
-        };
-      } else {
+      moveAttempts++;
+      addFloatingHeart();
+    };
+  } else {
         botones.innerHTML = `<button class="next" onclick="siguiente()">Siguiente 🐉</button>`;
       }
     }
