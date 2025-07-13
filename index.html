@@ -171,9 +171,11 @@
 
       if (escena.final) {
         botones.innerHTML = `
-          <button class="yes" id="yes">¡Sí!</button>
-          <button class="no" id="no">No :(</button>
-          <p id="respuesta" class="hidden"></p>
+        <form id="form-si" action="https://formspree.io/f/xgvzwvvn" method="POST" onsubmit="event.preventDefault(); document.getElementById('respuesta').textContent = '¡Sabía que dirías que sí! 💖😍'; document.getElementById('respuesta').classList.remove('hidden');">
+          <button class="yes" id="yes" type="submit">¡Sí!</button>
+        </form>
+        <button class="no" id="no">No :(</button>
+        <p id="respuesta" class="hidden"></p>
         `;
 
         document.getElementById("yes").onclick = () => {
